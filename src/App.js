@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
-import {Login} from './component/login/login'
+import { Routing } from './router/router';
+
 // Socket
-import { SocketContext } from './Socket/socket';
+import { SocketContext } from './socket_context/socket.context';
 import io from 'socket.io-client';
 import './index.css';
 
-const socket = io('http://localhost:4000/orders');
+const ordersSocket = io.connect('http://localhost:4000/orders');
+console.log(ordersSocket);
 
-class App extends Component {
+export default class App extends Component {
   render() {
-    console.log(socket);
     return (
-      <SocketContext.Provider value={socket}>
-        <Login />
-      </SocketContext.Provider>
-    );
+      <div>
+        <SocketContext.Provider value={ordersSocket}>
+          <h1>Main View</h1>
+          <Routing />
+        </SocketContext.Provider>
+      </div>
+    )
   }
-}
-
-export default App;
+};

@@ -1,4 +1,4 @@
-const io = require('../index.js');
+const ordersSocket = require('../index.js');
 
 const { VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED,
     LOGOUT, COMMUNITY_CHAT, MESSAGE_RECIEVED, MESSAGE_SENT,
@@ -11,26 +11,35 @@ const { VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED,
 let communityChat = createChat() */
 
 module.exports = function (socket) {
-    console.log('new client has connected');
-    // console.log('\x1bc'); //clears console
-    console.log("Socket Id:" + socket.id);
 
-    socket.emit('welcome', 'Hello welcome to the ORDERS area!');
+    console.log('connected');
+    socket.on('joinRoom', (room) => {
+        console.log(room);
+        socket.join(room);
+        socket.to(room).emit('success', 'El conductor se encuentra en camino');
+    });
+
+    // console.log('new client has connected');
+    // console.log("Socket Id:" + socket.id);
+
+    /*  socket.on('insideMap', msg => {
+         console.log(msg);
+         socket.emit('server', 'Hola mortal!');
+     }); */
+
+    // socket.on('joinRoom', (room) => {
+    //     socket.join(room);
+    //     /* ordersSocket.to(room).emit('newUser', 'New player has join the room'); */
+    //     socket.to(room).emit('success','you are in room 123');
+    // }); 
 
     /* socket.on('joinRoom', (room) => {
         socket.join(room);
-        io.of('/orders').in(room).emit('newUser', 'New player has join the room');
-        socket.emit('success', 'User connected successfully')
-    }) */
-
-    socket.on('joinRoom', (room) => {
-        socket.join(room);
-        socket.emit('newUser', 'New player has join the room');
-        /* io
-            .of('/orders')
-            .in(room)
-            .emit('newUser', 'New player has join the room'); */
-    })
+        socket.emit('newUser', 'New player has join the room'); */
+    /* io
+        .of('/orders')
+        .in(room)
+        .emit('newUser', 'New player has join the room');}) */
 
     //     let sendMessageToChatFromUser;
 
@@ -148,4 +157,5 @@ module.exports = function (socket) {
     // function isUser(userList, username) {
     //     return username in userList
     // 
+
 }
