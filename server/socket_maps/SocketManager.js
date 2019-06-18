@@ -5,19 +5,73 @@ const { VERIFY_USER, USER_CONNECTED, USER_DISCONNECTED,
     TYPING } = require('./events')
 
 /* const { createUser, createMessage, createChat } = require('../Factories') */
-
 /* let connectedUsers = {}
-
 let communityChat = createChat() */
+
+let active = false;
+let update = false;
+let users = [];
 
 module.exports = function (socket) {
 
     console.log('connected');
+
+    let addedUser = false;
+
     socket.on('joinRoom', (room) => {
+
         console.log(room);
         socket.join(room);
-        socket.to(room).emit('success', 'El conductor se encuentra en camino');
+
+        socket.to(room).emit('success', 'Usuario dentro de OrderID');
+
+        socket.on('add user', (username) => {
+
+            console.log('llego este', username);
+            if (addedUser) return;
+            socket.username = username.user;
+            let new_count = users.length;
+
+            console.log('increase users', new_count);
+
+            let new_user = {
+                username: username.user,
+                active: active,
+                lat: null,
+                lng: null,
+                update: false
+            };
+
+            users.push(new_user);
+            console.log('total', users);
+        });
+
+        // Sending back users ARRAY to any user that connects to our SERVER
+        socket.on('load_init', (data) => {
+            socket.emit('load_init', users);
+        })
+
+        socket.on('disconnect', () => {
+
+            for (var i = 0; i < users.length; i++)
+                if (users[i].username === socket.username) {
+                    socket.broadcast.emit('remove_marker', {
+                        username: users[i].username
+                    });
+                    users.splice(i, 1);
+                    break;
+                }
+            var new_count = users.length;
+            console.log(new_count);
+            console.log('remove marker');
+        });
+
+
     });
+
+
+
+
 
     // console.log('new client has connected');
     // console.log("Socket Id:" + socket.id);

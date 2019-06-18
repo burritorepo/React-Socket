@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Routing } from './router/router';
+import './components/map/map.css';
 
 // Socket
 import { SocketContext } from './socket_context/socket.context';

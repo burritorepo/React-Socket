@@ -1,0 +1,8 @@
+.map-template-1 {
+    min-height: 450px;
+    min-width: 400px;
+    top: 0;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border: 2px solid black;
+  }
